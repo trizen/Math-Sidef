@@ -25,7 +25,7 @@ our @EXPORT_OK = @names;
 sub unpack_value {
     my ($r) = @_;
 
-    my $ref = ref($r);
+    my $ref = ref($r // return undef);
 
     if ($ref eq $sidef_array) {
         return [map { __SUB__->($_) } @$r];
@@ -64,12 +64,14 @@ sub unpack_value {
                         }
                     }
                   )
+                  : ref($_) eq 'ARRAY'
+                  ? [map { ref($_) eq 'Math::AnyNum' ? $sidef_number->new($$_) : $sidef_number->new($_) } @$_]
                   : $sidef_number->new($_)
             } @args;
 
             my $r = &{$sidef_number . '::' . $name}(@args);
 
-            if (ref($r) eq $sidef_number) {
+            if (ref($r // return undef) eq $sidef_number) {
                 return Math::AnyNum->new($$r);
             }
 
