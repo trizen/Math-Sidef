@@ -22,7 +22,7 @@ my @names   = keys %methods;
 our @ISA       = qw(Exporter);
 our @EXPORT_OK = @names;
 
-sub unpack_value {
+sub _unpack_value {
     my ($r) = @_;
 
     my $ref = ref($r // return undef);
@@ -60,7 +60,7 @@ sub unpack_value {
                     code => do {
                         my $v = $_;
                         sub {
-                            $v->(map { unpack_value($_) } @_);
+                            $v->(map { _unpack_value($_) } @_);
                         }
                     }
                   )
@@ -80,10 +80,10 @@ sub unpack_value {
             }
 
             if (ref($r) eq $sidef_array) {
-                return map { ref($r) eq $sidef_number ? Math::AnyNum->new($$_) : unpack_value($_) } @$r;
+                return map { ref($r) eq $sidef_number ? Math::AnyNum->new($$_) : _unpack_value($_) } @$r;
             }
 
-            return unpack_value($r);
+            return _unpack_value($r);
         };
     }
 }
