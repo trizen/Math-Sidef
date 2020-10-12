@@ -13,12 +13,38 @@ use Math::AnyNum;
 
 my $sidef_number = 'Sidef::Types::Number::Number';
 my $sidef_array  = 'Sidef::Types::Array::Array';
+my $sidef_string = 'Sidef::Types::String::String';
+my $sidef_bool   = 'Sidef::Types::Bool::Bool';
 
 my %methods = %{$sidef_number->methods->get_value};
 my @names   = keys %methods;
 
 our @ISA       = qw(Exporter);
 our @EXPORT_OK = @names;
+
+sub unpack_value {
+    my ($r) = @_;
+
+    my $ref = ref($r);
+
+    if ($ref eq $sidef_array) {
+        return [map { __SUB__->($_) } @$r];
+    }
+
+    if ($ref eq $sidef_number) {
+        return Math::AnyNum->new($$_);
+    }
+
+    if ($ref eq $sidef_bool) {
+        return $$r;
+    }
+
+    if ($ref eq $sidef_string) {
+        return $$r;
+    }
+
+    return $r;
+}
 
 {
     no strict 'refs';
@@ -27,7 +53,19 @@ our @EXPORT_OK = @names;
         *{__PACKAGE__ . '::' . $name} = sub {
             my (@args) = @_;
 
-            @args = map { ref($_) eq 'Math::AnyNum' ? $sidef_number->new($$_) : $sidef_number->new($_) } @args;
+            @args = map {
+                ref($_) eq 'Math::AnyNum'
+                  ? $sidef_number->new($$_)
+                  : ref($_) eq 'CODE' ? Sidef::Types::Block::Block->new(
+                    code => do {
+                        my $v = $_;
+                        sub {
+                            $v->(map { unpack_value($_) } @_);
+                        }
+                    }
+                  )
+                  : $sidef_number->new($_)
+            } @args;
 
             my $r = &{$sidef_number . '::' . $name}(@args);
 
@@ -35,11 +73,15 @@ our @EXPORT_OK = @names;
                 return Math::AnyNum->new($$r);
             }
 
-            if (ref($r) eq $sidef_array) {
-                return map { Math::AnyNum->new($$_) } @$r;
+            if (ref($r) eq $sidef_bool) {
+                return $$r;
             }
 
-            return $r;
+            if (ref($r) eq $sidef_array) {
+                return map { ref($r) eq $sidef_number ? Math::AnyNum->new($$_) : unpack_value($_) } @$r;
+            }
+
+            return unpack_value($r);
         };
     }
 }
@@ -63,6 +105,11 @@ Math::Sidef - Perl interface to Sidef's mathematical library.
 
   # Prime factorization of 2^128 + 1
   say join ' * ', factor(ipow(2, 128) + 1);
+
+  # Iterate over prime numbers in range 1..100
+  Math::Sidef::each_prime(1, 100, sub {
+     say $_[0];
+  });
 
 =head1 DESCRIPTION
 

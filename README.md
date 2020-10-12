@@ -21,6 +21,11 @@ say composite(1e9);   # 10^9-th composite number
 
 # Prime factorization of 2^128 + 1
 say join ' * ', factor(ipow(2, 128) + 1);
+
+# Iterate over prime numbers in range 1..100
+Math::Sidef::each_prime(1, 100, sub {
+    say $_[0];
+});
 ```
 
 # INSTALLATION
