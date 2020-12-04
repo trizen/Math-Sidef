@@ -1,5 +1,6 @@
 package Math::Sidef;
 
+use utf8;
 use 5.016;
 use strict;
 use warnings;
@@ -17,10 +18,11 @@ my $sidef_string = 'Sidef::Types::String::String';
 my $sidef_bool   = 'Sidef::Types::Bool::Bool';
 
 my %methods = %{$sidef_number->methods->get_value};
-my @names   = keys %methods;
+my @names   = grep { /^\w+\z/ } keys %methods;
 
-our @ISA       = qw(Exporter);
-our @EXPORT_OK = @names;
+our @ISA         = qw(Exporter);
+our @EXPORT_OK   = @names;
+our %EXPORT_TAGS = (all => \@names);
 
 sub _unpack_value {
     my ($r) = @_;
@@ -120,6 +122,20 @@ B<Math::Sidef> provides an easy interface to the numerical built-in system of L<
 It supports all the numerical functions provided by L<Sidef::Types::Number::Number>.
 
 The returned values are L<Math::AnyNum> objects.
+
+=head1 IMPORT
+
+Any function can be imported, using the following syntax:
+
+    use Math::Sidef qw(function_name);
+
+Additionally, for importing all the functions, use:
+
+    use Math::Sidef qw(:all);
+
+The list of functions available for importing, can be listed with:
+
+    CORE::say for sort @Math::Sidef::EXPORT_OK;
 
 =head1 SEE ALSO
 

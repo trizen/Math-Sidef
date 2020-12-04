@@ -28,6 +28,26 @@ Math::Sidef::each_prime(1, 100, sub {
 });
 ```
 
+# IMPORT
+
+Any function can be imported, using the following syntax:
+
+```perl
+use Math::Sidef qw(function_name);
+```
+
+Additionally, for importing all the functions, use:
+
+```perl
+use Math::Sidef qw(:all);
+```
+
+The list of functions available for importing, can be listed with:
+
+```perl
+CORE::say for sort @Math::Sidef::EXPORT_OK;
+```
+
 # INSTALLATION
 
 To install this module type the following:
