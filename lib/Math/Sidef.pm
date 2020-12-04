@@ -17,8 +17,7 @@ my $sidef_array  = 'Sidef::Types::Array::Array';
 my $sidef_string = 'Sidef::Types::String::String';
 my $sidef_bool   = 'Sidef::Types::Bool::Bool';
 
-my %methods = %{$sidef_number->methods->get_value};
-my @names   = grep { /^\w+\z/ } keys %methods;
+my @names = grep { /^\w+\z/ } keys %{$sidef_number->methods->get_value};
 
 our @ISA         = qw(Exporter);
 our @EXPORT_OK   = @names;
@@ -150,6 +149,10 @@ The list of functions available for importing, can be listed with:
 =item * L<Math::Prime::Util::GMP> - Utilities related to prime numbers, using GMP.
 
 =back
+
+=head1 REPOSITORY
+
+L<https://github.com/trizen/Math-Sidef>
 
 =head1 AUTHOR
 
