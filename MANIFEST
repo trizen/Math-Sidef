@@ -10,3 +10,5 @@ META.yml
 README.md
 t/00-load.t
 t/basic.t
+utils/auto_perltidy.sh
+utils/bak_cleaner.sh
