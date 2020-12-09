@@ -134,7 +134,7 @@ Additionally, for importing all the functions, use:
 
 The list of functions available for importing, can be listed with:
 
-    CORE::say for sort @Math::Sidef::EXPORT_OK;
+    CORE::say join ", ", sort @Math::Sidef::EXPORT_OK;
 
 =head1 SEE ALSO
 
