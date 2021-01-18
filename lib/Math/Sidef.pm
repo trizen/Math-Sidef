@@ -7,7 +7,7 @@ use warnings;
 
 use Exporter;
 
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 
 use Sidef;
 use Math::AnyNum;
@@ -47,6 +47,18 @@ sub _unpack_value {
     return $r;
 }
 
+sub _pack_value {
+    my ($r) = @_;
+
+    my $ref = ref($r // return undef);
+
+    if ($ref eq 'Math::AnyNum') {
+        return $sidef_number->new($$r);
+    }
+
+    return $sidef_number->new($r);
+}
+
 {
     no strict 'refs';
     foreach my $name (@names) {
@@ -61,7 +73,7 @@ sub _unpack_value {
                     code => do {
                         my $v = $_;
                         sub {
-                            $v->(map { _unpack_value($_) } @_);
+                            _pack_value(scalar $v->(map { _unpack_value($_) } @_));
                         }
                     }
                   )
