@@ -7,7 +7,7 @@ use warnings;
 
 use Exporter;
 
-our $VERSION = '0.04';
+our $VERSION = '0.05';
 
 use Sidef;
 use Math::AnyNum;
@@ -213,8 +213,8 @@ Math::Sidef - Perl interface to Sidef's mathematical library.
   use 5.018;
   use Math::Sidef qw(factor composite prime ipow);
 
-  say prime(1e9);       # 10^9-th prime number
-  say composite(1e9);   # 10^9-th composite number
+  say prime(1e7);       # 10^7-th prime number
+  say composite(1e7);   # 10^7-th composite number
 
   # Prime factorization of 2^128 + 1
   say join ' * ', factor(ipow(2, 128) + 1);

@@ -5,7 +5,7 @@ use strict;
 use warnings;
 use Test::More;
 
-plan tests => 10;
+plan tests => 16;
 
 use Math::Sidef qw(:all);
 
@@ -19,6 +19,16 @@ is(pow(Mod(42, 97), 10), Mod(8, 97));
 is(powmod(Quadratic(3, 4, 100), 10, 97), Quadratic(72, 72, 100));
 is(cyclotomic_polynomial(10), Polynomial(0 => 1, 1 => -1, 2 => 1, 3 => -1, 4 => 1));
 
+is(add(Gauss(3,4), Gauss(9,10)), Gauss(3+9, 4+10));
+is(Gauss(3,4)->add(Gauss(9,10)), Gauss(3+9, 4+10));
+
+is(Poly(1), Poly(1 => 1));
+is(Poly(1), Poly([1, 0]));
+is(Poly(2), Poly([1, 0, 0]));
+
+is(mul(Poly([9,0,2]), Poly([3,1])), Polynomial(0 => 2, 1 => 6, 2 => 9, 3 => 27));
+
+#is(Gauss(3,4) + Gauss(9,10), Gauss(3+9, 4+10));    # TODO
 #is(binomial(Poly(1), 3), Polynomial(1 => div(1,3), 2 => div(-1,2), 3 => div(1,6)));
 
 my $x = Polynomial(1 => div(1,6), 2 => div(1,2), 3 => div(1,3));
