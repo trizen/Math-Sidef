@@ -272,6 +272,7 @@ It's also possible to import only functions for specific uses:
 
 Example:
 
+    use 5.018;
     use Math::Sidef qw(:gauss :quadratic);
 
     say pow(Gauss(3,4), 10);

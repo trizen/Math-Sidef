@@ -6,9 +6,25 @@ Perl interface to [Sidef](https://metacpan.org/release/Sidef)'s mathematical lib
 
 Math::Sidef provides an easy interface to the numerical built-in system of [Sidef](https://metacpan.org/release/Sidef).
 
-It supports all the numerical functions provided by [Sidef::Types::Number::Number](https://metacpan.org/pod/Sidef::Types::Number::Number).
+It supports all the numerical functions provided by:
 
-The returned values are [Math::AnyNum](https://metacpan.org/release/Math-AnyNum) objects.
+
+* [Sidef::Types::Number::Number](https://metacpan.org/pod/Sidef::Types::Number::Number)
+
+* [Sidef::Types::Number::Mod](https://metacpan.org/pod/Sidef::Types::Number::Mod)
+
+* [Sidef::Types::Number::Gauss](https://metacpan.org/pod/Sidef::Types::Number::Gauss)
+
+* [Sidef::Types::Number::Quadratic](https://metacpan.org/pod/Sidef::Types::Number::Quadratic)
+
+* [Sidef::Types::Number::Quaternion](https://metacpan.org/pod/Sidef::Types::Number::Quaternion)
+
+* [Sidef::Types::Number::Polynomial](https://metacpan.org/pod/Sidef::Types::Number::Polynomial)
+
+* [Sidef::Types::Number::Fraction](https://metacpan.org/pod/Sidef::Types::Number::Fraction)
+
+
+The returned numerical values are returned as [Math::AnyNum](https://metacpan.org/release/Math-AnyNum) objects.
 
 # SYNOPSIS
 
@@ -42,10 +58,38 @@ Additionally, for importing all the functions, use:
 use Math::Sidef qw(:all);
 ```
 
+It's also possible to import only functions for specific uses:
+
+```
+    :number        export Number functions, with Number() constructor
+    :gauss         export Gauss functions, with Gauss() constructor
+    :quadratic     export Quadratic functions, with Quadratic() constructor
+    :quaternion    export Quaternion functions, with Quaternion() constructor
+    :mod           export Mod functions, with Mod() constructor
+    :poly          export Poly functions, with Poly() constructor
+    :fraction      export Fraction functions, with Fraction() constructor
+```
+
+Example:
+
+```perl
+use 5.018;
+use Math::Sidef qw(:gauss :quadratic);
+
+say pow(Gauss(3,4), 10);
+say powmod(Quadratic(3, 4, 100), 10, 97);
+```
+
 The list of functions available for importing, can be listed with:
 
 ```perl
-CORE::say for sort @Math::Sidef::EXPORT_OK;
+CORE::say join ", ", sort @Math::Sidef::EXPORT_OK;
+```
+
+while the methods for a specific group (e.g.: quadratic), can be listed with:
+
+```perl
+CORE::say join ", ", sort @{$Math::Sidef::EXPORT_TAGS{quadratic}};
 ```
 
 # INSTALLATION
@@ -61,7 +105,7 @@ make install
 
 # DEPENDENCIES
 
-This module requires these other modules and libraries:
+This module requires these other modules:
 
 * [Sidef](https://metacpan.org/release/Sidef)
 * [Math::AnyNum](https://metacpan.org/release/Math-AnyNum)
