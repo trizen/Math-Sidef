@@ -39,10 +39,7 @@ my @mod_methods        = grep { /^\w+\z/ } keys %{$sidef_mod->methods->get_value
 my @polynomial_methods = grep { /^\w+\z/ } keys %{$sidef_polynomial->methods->get_value};
 my @fraction_methods   = grep { /^\w+\z/ } keys %{$sidef_fraction->methods->get_value};
 
-my @names = (
-             @number_methods, @gauss_methods,      @quadratic_methods, @quaternion_methods,
-             @mod_methods,    @polynomial_methods, @fraction_methods
-            );
+my @names = (@number_methods, @gauss_methods, @quadratic_methods, @quaternion_methods, @mod_methods, @polynomial_methods, @fraction_methods);
 
 @names = do {    # remove duplicates
     my %seen;
@@ -165,8 +162,7 @@ sub _pack_value {
                         }
                     }
                   )
-                  : ref($_) eq 'ARRAY'
-                  ? [map { ref($_) eq 'Math::AnyNum' ? $sidef_number->new($$_) : _pack_value($_) } @$_]
+                  : ref($_) eq 'ARRAY' ? [map { ref($_) eq 'Math::AnyNum' ? $sidef_number->new($$_) : _pack_value($_) } @$_]
                   : _pack_value($_)
             } @args;
 
